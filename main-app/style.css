@@ -1,0 +1,342 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Main Container Layout */
+.container {
+    display: grid;
+    grid-template-areas: 
+        "header header"
+        "video controls"
+        "text2sign sign2text";
+    grid-template-columns: 1fr 300px;
+    grid-template-rows: auto 1fr 1fr;
+    gap: 15px;
+    padding: 20px;
+    height: 100vh;
+    max-height: 100vh;
+}
+
+/* Header */
+.header {
+    grid-area: header;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.header h1 {
+    color: #4a5568;
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header p {
+    color: #718096;
+    font-size: 1.1rem;
+}
+
+/* Video Call Section */
+.video-call {
+    grid-area: video;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.video-call::before {
+    content: 'Video Call';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    z-index: 10;
+}
+
+/* Text to Sign Section */
+.text-to-sign {
+    grid-area: text2sign;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.text-to-sign::before {
+    content: 'Text to Sign Language';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(102, 126, 234, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    z-index: 10;
+}
+
+/* Sign to Text Section */
+.sign-to-text {
+    grid-area: sign2text;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.sign-to-text::before {
+    content: 'Sign to Text Translation';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(118, 75, 162, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    z-index: 10;
+}
+
+/* Controls Section */
+.controls {
+    grid-area: controls;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.controls h3 {
+    color: #4a5568;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+/* Button Styles */
+.control-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+}
+
+.control-btn.secondary {
+    background: linear-gradient(135deg, #ed8936, #dd6b20);
+    box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+}
+
+.control-btn.secondary:hover {
+    box-shadow: 0 6px 20px rgba(237, 137, 54, 0.4);
+}
+
+.control-btn.tertiary {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+.control-btn.tertiary:hover {
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+}
+
+/* Iframe Styles */
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px;
+}
+
+/* Status Indicator */
+.status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #f7fafc;
+    border-radius: 8px;
+    margin-top: auto;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #48bb78;
+    animation: pulse 2s infinite;
+}
+
+.status.offline .status-dot {
+    background: #e53e3e;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        grid-template-areas: 
+            "header"
+            "video"
+            "text2sign"
+            "sign2text"
+            "controls";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr 1fr 1fr auto;
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .control-btn {
+        flex: 1;
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header p {
+        font-size: 1rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+}
+
+/* Loading Animation */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 1.1rem;
+    color: #718096;
+}
+
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a6fd8, #6a42a0);
+}
+
+/* Connection Status */
+.connection-status {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.connection-status.connected {
+    background: #48bb78;
+    color: white;
+}
+
+.connection-status.disconnected {
+    background: #e53e3e;
+    color: white;
+}
+
+.connection-status.connecting {
+    background: #ed8936;
+    color: white;
+}

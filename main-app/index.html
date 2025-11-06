@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Call with Sign Language Translation</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container {
+            display: grid;
+            grid-template-areas: 
+                "video video controls"
+                "text2sign sign2text controls";
+            grid-template-columns: 1fr 1fr 200px;
+            gap: 10px;
+            height: 100vh;
+        }
+        
+        .video-call {
+            grid-area: video;
+            border: 1px solid #ccc;
+        }
+        
+        .text-to-sign {
+            grid-area: text2sign;
+            border: 1px solid #ccc;
+        }
+        
+        .sign-to-text {
+            grid-area: sign2text;
+            border: 1px solid #ccc;
+        }
+        
+        .controls {
+            grid-area: controls;
+            padding: 10px;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="video-call">
+            <iframe src="./video-call/index.html" id="videoFrame"></iframe>
+        </div>
+        
+        <div class="text-to-sign">
+            <iframe src="./text-to-sign/index.html" id="text2signFrame"></iframe>
+        </div>
+        
+        <div class="sign-to-text">
+            <iframe src="./sign-to-text/index.html" id="sign2textFrame"></iframe>
+        </div>
+        
+        <div class="controls">
+            <button onclick="startCall()">Start Call</button>
+            <button onclick="shareText()">Share Text</button>
+            <button onclick="shareSign()">Share Sign</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

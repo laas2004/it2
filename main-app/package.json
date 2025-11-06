@@ -1,0 +1,12 @@
+{
+    "name": "sign-language-video-call",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "live-server --port=3000",
+        "build": "echo 'Build complete'"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "live-server": "^1.2.2"
+    }
+}

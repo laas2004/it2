@@ -70,15 +70,17 @@ python app.py
 
 ## Start the real-time text translation:
 
--Enter the text in the dialog box
--Make sure the text is present in the dataset
+- Enter the text in the dialog box
+- Make sure the text is present in the dataset
+
 
 ## Start the real-time bidirectional sign translation:
 
--Select a language you know
--Select a language you want the translation in
--Start gesturing in the sign language you know
--Wait for a littlw while for the translated output to be displayed.
+- Select a language you know
+- Select a language you want the translation in
+- Start gesturing in the sign language you know
+-Wait for a littlw while for the translated output to be displayed
+
 
 ## Project Structure
 

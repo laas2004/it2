@@ -1,0 +1,630 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Text to Sign Language</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Text to Sign Language</h2>
+        <textarea id="textInput" placeholder="Enter text to translate to sign language..."></textarea>
+        <button onclick="translateText()">Translate to Sign</button>
+        <div class="output" id="output">
+            Sign output will appear here...
+        </div>
+    </div>
+
+    <script>
+        let currentTranslation = '';
+        
+        // Handle messages from parent window
+        window.addEventListener('message', function(event) {
+            console.log('Text-to-sign received message:', event.data);
+            
+            switch(event.data.action) {
+                case 'getTranslation':
+                    sendTranslationData();
+                    break;
+                    
+                case 'receiveSignData':
+                    if (event.data.type === 'signToTextData') {
+                        console.log('Received sign data:', event.data.data);
+                    }
+                    break;
+            }
+        });
+        
+        async function translateText() {
+            const text = document.getElementById('textInput').value;
+            const output = document.getElementById('output');
+            
+            if (!text) {
+                output.textContent = 'Please enter some text';
+                return;
+            }
+            
+            try {
+                output.textContent = 'Translating...';
+                const response = await fetch('/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentTranslation = result.sign_output;
+                    output.textContent = result.sign_output;
+                    // Auto-send to parent
+                    sendTranslationData();
+                } else {
+                    output.textContent = 'Error: ' + result.error;
+                }
+            } catch (error) {
+                output.textContent = 'Translation failed: ' + error.message;
+            }
+        }
+        
+        function sendTranslationData() {
+            const text = document.getElementById('textInput').value;
+            window.parent.postMessage({ 
+                type: 'textToSignData', 
+                data: {
+                    inputText: text,
+                    outputSign: currentTranslation,
+                    timestamp: new Date().toISOString()
+                }
+            }, '*');
+        }
+        
+        // Auto-translate on input change
+        document.getElementById('textInput').addEventListener('input', function() {
+            if (this.value.length > 3) {
+                translateText();
+            }
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- trying to make this work v1 -->
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Text to Sign Language</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        #video-container {
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text to Sign Language Translator</h1>
+        
+        <textarea id="textInput" placeholder="Enter text to translate to sign language..."></textarea>
+        <br>
+        <button onclick="translateText()">Translate to Sign Language</button>
+        
+        <div id="result"></div>
+        <div id="video-container"></div>
+    </div>
+
+    <script>
+        function translateText() {
+            const text = document.getElementById('textInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            const videoContainer = document.getElementById('video-container');
+            
+            if (!text) {
+                resultDiv.innerHTML = '<p class="error">Please enter some text</p>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<p>Processing...</p>';
+            videoContainer.innerHTML = '';
+            
+            fetch('/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({text: text})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultDiv.innerHTML = `<p class="success">${data.message}</p>`;
+                    // Load the video
+                    loadVideo();
+                } else {
+                    resultDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `<p class="error">Error: ${error}</p>`;
+            });
+        }
+        
+        function loadVideo() {
+            fetch('/video')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const videoContainer = document.getElementById('video-container');
+                    videoContainer.innerHTML = `
+                        <h3>Sign Language Translation:</h3>
+                        <video width="400" controls>
+                            <source src="${data.video_url}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    `;
+                }
+            });
+        }
+    </script>
+</body>
+</html> -->
+
+
+<!-- trying to make this work v2 -->
+ <!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Text to Sign Language</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            padding: 12px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        #result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .success {
+            background-color: #d1edff;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .loading {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        #video-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+        video {
+            max-width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .available-words {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text to Sign Language Translator</h1>
+        
+        <textarea id="textInput" placeholder="Enter text to translate to sign language (e.g., 'hello', 'what is your name', 'how are you')..."></textarea>
+        <br>
+        <button onclick="translateText()" id="translateBtn">Translate to Sign Language</button>
+        
+        <div id="result"></div>
+        <div id="video-container"></div>
+        
+    
+    </div>
+
+    <script>
+        function translateText() {
+            const text = document.getElementById('textInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            const videoContainer = document.getElementById('video-container');
+            const button = document.getElementById('translateBtn');
+            
+            if (!text) {
+                resultDiv.innerHTML = '<div class="error">Please enter some text</div>';
+                return;
+            }
+            
+            // Show loading state
+            button.disabled = true;
+            button.textContent = 'Processing...';
+            resultDiv.innerHTML = '<div class="loading">Converting text to sign language... This may take a moment.</div>';
+            videoContainer.innerHTML = '';
+            
+            fetch('/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({text: text})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultDiv.innerHTML = `<div class="success">${data.message}</div>`;
+                    // Show the video with cache busting
+                    showVideo(data.video_url);
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `<div class="error">Network error: ${error}</div>`;
+            })
+            .finally(() => {
+                // Reset button
+                button.disabled = false;
+                button.textContent = 'Translate to Sign Language';
+            });
+        }
+        
+        function showVideo(videoUrl) {
+            const videoContainer = document.getElementById('video-container');
+            
+            videoContainer.innerHTML = `
+                <h3>Sign Language Translation:</h3>
+                <video width="500" controls autoplay muted>
+                    <source src="${videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p><small>If video doesn't play, <a href="${videoUrl}" target="_blank">click here to open it directly</a></small></p>
+            `;
+        }
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- adding asl,bsl,isl v3 -->
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Text to Sign Language</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: white;
+        }
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            padding: 12px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        #result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .success {
+            background-color: #d1edff;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .loading {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        #video-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+        video {
+            max-width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .language-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text to Sign Language Translator</h1>
+        
+        <div class="input-group">
+            <label for="languageSelect">Select Sign Language:</label>
+            <select id="languageSelect">
+                <option value="asl">American Sign Language (ASL)</option>
+                <option value="bsl">British Sign Language (BSL)</option>
+                <option value="isl">Indian Sign Language (ISL)</option>
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <label for="textInput">Text to Translate:</label>
+            <textarea id="textInput" placeholder="Enter text to translate to sign language (e.g., 'hello', 'what is your name', 'how are you')..."></textarea>
+        </div>
+        
+        <button onclick="translateText()" id="translateBtn">Translate to Sign Language</button>
+        
+        <div id="result"></div>
+        <div id="video-container"></div>
+    </div>
+
+    <script>
+        function translateText() {
+            const text = document.getElementById('textInput').value.trim();
+            const language = document.getElementById('languageSelect').value;
+            const resultDiv = document.getElementById('result');
+            const videoContainer = document.getElementById('video-container');
+            const button = document.getElementById('translateBtn');
+            
+            if (!text) {
+                resultDiv.innerHTML = '<div class="error">Please enter some text</div>';
+                return;
+            }
+            
+            // Show loading state
+            button.disabled = true;
+            button.textContent = 'Processing...';
+            resultDiv.innerHTML = `<div class="loading">Converting text to ${getLanguageName(language)}... This may take a moment.</div>`;
+            videoContainer.innerHTML = '';
+            
+            fetch('/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text: text,
+                    language: language
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultDiv.innerHTML = `<div class="success">${data.message}</div>`;
+                    // Show the video with cache busting
+                    showVideo(data.video_url);
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `<div class="error">Network error: ${error}</div>`;
+            })
+            .finally(() => {
+                // Reset button
+                button.disabled = false;
+                button.textContent = 'Translate to Sign Language';
+            });
+        }
+        
+        function showVideo(videoUrl) {
+            const videoContainer = document.getElementById('video-container');
+            const language = document.getElementById('languageSelect').value;
+            const languageName = getLanguageName(language);
+            
+            videoContainer.innerHTML = `
+                <h3>Sign Language Translation <span class="language-badge">${languageName}</span>:</h3>
+                <video width="500" controls autoplay muted>
+                    <source src="${videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p><small>If video doesn't play, <a href="${videoUrl}" target="_blank">click here to open it directly</a></small></p>
+            `;
+        }
+        
+        function getLanguageName(languageCode) {
+            const languages = {
+                'asl': 'ASL',
+                'bsl': 'BSL', 
+                'isl': 'ISL'
+            };
+            return languages[languageCode] || 'Sign Language';
+        }
+    </script>
+</body>
+</html>

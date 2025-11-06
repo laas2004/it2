@@ -1,0 +1,6 @@
+file 'C:\Users\laasy\OneDrive\Desktop\cst12\TextToSignLanguage\signs\a.mp4'
+file 'C:\Users\laasy\OneDrive\Desktop\cst12\TextToSignLanguage\signs\b.mp4'
+file 'C:\Users\laasy\OneDrive\Desktop\cst12\TextToSignLanguage\signs\c.mp4'
+file 'C:\Users\laasy\OneDrive\Desktop\cst12\TextToSignLanguage\signs\c.mp4'
+file 'C:\Users\laasy\OneDrive\Desktop\cst12\TextToSignLanguage\signs\a.mp4'
+file 'C:\Users\laasy\OneDrive\Desktop\cst12\TextToSignLanguage\signs\b.mp4'

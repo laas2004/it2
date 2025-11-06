@@ -79,7 +79,7 @@ python app.py
 - Select a language you know
 - Select a language you want the translation in
 - Start gesturing in the sign language you know
--Wait for a littlw while for the translated output to be displayed
+- Wait for a littlw while for the translated output to be displayed
 
 
 ## Project Structure

@@ -57,6 +57,9 @@ python train_model.py
 ### 3. Run the Bidirectional Real-Time Sign Language Translation System
 
 ```
+cd main-app
+cd sign-to-text
+cd asl_gesture_recognition
 python app.py
 ```
 
